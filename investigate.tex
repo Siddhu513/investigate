@@ -1,0 +1,350 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\hypertarget{part-1-simulation-exercise}{%
+\section{Part 1: Simulation Exercise}\label{part-1-simulation-exercise}}
+
+\hypertarget{overview-this-part-is-going-to-execute-simulations-and-data-analysises-to-illustrate-application-of-the-central-limit-theorem.-r-programming-will-be-the-major-tool-to-realize-the-mentioned-goal.}{%
+\section{Overview: This part is going to execute simulations and data
+analysises to illustrate application of the central limit theorem. R
+programming will be the major tool to realize the mentioned
+goal.}\label{overview-this-part-is-going-to-execute-simulations-and-data-analysises-to-illustrate-application-of-the-central-limit-theorem.-r-programming-will-be-the-major-tool-to-realize-the-mentioned-goal.}}
+
+\hypertarget{question-1-show-the-sample-mean-and-compare-it-to-the-theoretical-mean-of-the-distribution.}{%
+\subsection{Question 1: Show the sample mean and compare it to the
+theoretical mean of the
+distribution.}\label{question-1-show-the-sample-mean-and-compare-it-to-the-theoretical-mean-of-the-distribution.}}
+
+knitr::opts\_chunk\$set(echo = TRUE) lambda \textless- 0.2 simData
+\textless- matrix(rexp(1000*40, lambda), nrow = 1000, ncol = 40)
+distMean \textless- apply(simData, 1, mean) hist(distMean, breaks = 50,
+main = ``The distribution of 1000 averages of 40 random exponentials'',
+xlab = ``Value of means'', ylab = ``Frequency of means'', col =
+``pink'') abline(v = 1/lambda, lty = 1, lwd = 5, col = ``red'')
+legend(``topright'', lty = 1, lwd = 5, col = ``red'', legend =
+``theoretical mean'')
+
+\#The simulated sample means are normally distributed with a center very
+close to the theoretical mean.
+
+\hypertarget{question-2-show-how-variable-the-sample-is-via-variance-and-compare-it-to-the-theoretical-variance-of-the-distribution.}{%
+\subsection{Question 2: Show how variable the sample is (via variance)
+and compare it to the theoretical variance of the
+distribution.}\label{question-2-show-how-variable-the-sample-is-via-variance-and-compare-it-to-the-theoretical-variance-of-the-distribution.}}
+
+distVar \textless- apply(simData, 1, var) hist(distVar, breaks = 50,
+main = ``The distribution of 1000 variance of 40 random exponentials'',
+xlab = ``Value of variances'', ylab = ``Frequency of variance'', col =
+``light blue'') abline(v = (1/lambda)\^{}2, lty = 1, lwd = 5, col =
+``blue'') legend(``topright'', lty = 1, lwd = 5, col = ``blue'', legend
+= ``theoretical variance'')
+
+\#The simulated sample variances are almost normally distributed with a
+center near the theoretical variance.
+
+\hypertarget{question-3-show-that-the-distribution-is-approximately-normal.}{%
+\subsection{Question 3: Show that the distribution is approximately
+normal.}\label{question-3-show-that-the-distribution-is-approximately-normal.}}
+
+par(mfrow = c(3, 1)) hist(simData, breaks = 50, main = ``Distribution of
+exponentials with lambda equals to 0.2'', xlab = ``Exponentials'', col =
+``yellow'') hist(distMean, breaks = 50, main = ``The distribution of
+1000 averages of 40 random exponentials'', xlab = ``Value of means'',
+ylab = ``Frequency of means'', col = ``pink'') simNorm \textless-
+rnorm(1000, mean = mean(distMean), sd = sd(distMean)) hist(simNorm,
+breaks = 50, main = ``A normal distribution with theoretical mean and sd
+of the exponentials'', xlab = ``Normal variables'', col = ``light
+green'')
+
+\hypertarget{results}{%
+\subsubsection{Results}\label{results}}
+
+\hypertarget{the-first-histogram-is-the-distribution-of-the-exponentials-with-lambda-equals-to-0.2.-the-second-histogram-is-the-distribution-of-1000-averages-of-40-random-exponentials}{%
+\paragraph{1. The first histogram is the distribution of the
+exponentials with lambda equals to 0.2. The second histogram is the
+distribution of 1000 averages of 40 random
+exponentials}\label{the-first-histogram-is-the-distribution-of-the-exponentials-with-lambda-equals-to-0.2.-the-second-histogram-is-the-distribution-of-1000-averages-of-40-random-exponentials}}
+
+\hypertarget{the-third-histogram-is-a-real-normal-distribution-with-a-mean-and-standard-deviation-equals-to-the-second-histograms.}{%
+\paragraph{2. The third histogram is a real normal distribution with a
+mean and standard deviation equals to the second
+histogram's.}\label{the-third-histogram-is-a-real-normal-distribution-with-a-mean-and-standard-deviation-equals-to-the-second-histograms.}}
+
+\hypertarget{comparing-the-first-with-the-second-histogram-we-can-see-the-distrubution-becames-normal-as-the-means-were-taken-from-each-groups.}{%
+\paragraph{3. Comparing the first with the second histogram, we can see
+the distrubution becames normal as the means were taken from each
+groups.}\label{comparing-the-first-with-the-second-histogram-we-can-see-the-distrubution-becames-normal-as-the-means-were-taken-from-each-groups.}}
+
+\hypertarget{it-is-a-result-of-the-central-limit-theorem.}{%
+\paragraph{4. It is a result of the central limit
+theorem.}\label{it-is-a-result-of-the-central-limit-theorem.}}
+
+\hypertarget{comparing-the-second-and-the-third-histogram-we-can-see-the-distribution-of-the-means-is-similar-to-a-real-normal-distribution-with-the-same-mean-and-standard-deviation.}{%
+\paragraph{5. Comparing the second and the third histogram, we can see
+the distribution of the means is similar to a real normal distribution
+with the same mean and standard
+deviation.}\label{comparing-the-second-and-the-third-histogram-we-can-see-the-distribution-of-the-means-is-similar-to-a-real-normal-distribution-with-the-same-mean-and-standard-deviation.}}
+
+\hypertarget{part-2analyze-the-toothgrowth-data-in-the-r-datasets-package}{%
+\section{Part 2:Analyze the ToothGrowth data in the R datasets
+package}\label{part-2analyze-the-toothgrowth-data-in-the-r-datasets-package}}
+
+\hypertarget{overview-in-this-part-we-will-do-some-statistical-data-analysises-about-the-toothlength-data.-question-1-load-the-toothgrowth-data-and-perform-some-basic-exploratory-data-analyses.}{%
+\section{Overview: In this part we will do some statistical data
+analysises about the Toothlength data. \#\#\#Question 1: Load the
+ToothGrowth data and perform some basic exploratory data
+analyses.}\label{overview-in-this-part-we-will-do-some-statistical-data-analysises-about-the-toothlength-data.-question-1-load-the-toothgrowth-data-and-perform-some-basic-exploratory-data-analyses.}}
+
+library(stats) data(ToothGrowth) library(ggplot2) qplot(dose, len, data
+= ToothGrowth, color = supp, geom = ``point'') + geom\_smooth(method =
+``lm'') + labs(title = ``ToothGrowth'') + labs(x = ``Dose of
+supplements'', y = ``Length of teeth'')
+
+\hypertarget{from-the-plot-we-can-get}{%
+\subsubsection{From the plot we can
+get}\label{from-the-plot-we-can-get}}
+
+\hypertarget{the-length-of-teeth-goes-up-as-the-dose-of-supplements-increases-which-indicates-that-the-supplements-may-help-teeth-growth.}{%
+\paragraph{1. the length of teeth goes up as the dose of supplements
+increases, which indicates that the supplements may help teeth
+growth.}\label{the-length-of-teeth-goes-up-as-the-dose-of-supplements-increases-which-indicates-that-the-supplements-may-help-teeth-growth.}}
+
+\hypertarget{at-the-same-dose-oj-seems-to-incur-a-higher-increase-of-teeth-growth-than-vc.}{%
+\paragraph{2. At the same dose, OJ seems to incur a higher increase of
+teeth growth than
+VC.}\label{at-the-same-dose-oj-seems-to-incur-a-higher-increase-of-teeth-growth-than-vc.}}
+
+\hypertarget{the-slope-of-oj-is-not-as-steep-as-the-slope-of-vc-meaning-an-increase-in-vc-may-make-a-larger-increase-in-teeth-length-than-in-oj.}{%
+\paragraph{3. the slope of OJ is not as steep as the slope of VC,
+meaning an increase in VC may make a larger increase in teeth length
+than in
+OJ.}\label{the-slope-of-oj-is-not-as-steep-as-the-slope-of-vc-meaning-an-increase-in-vc-may-make-a-larger-increase-in-teeth-length-than-in-oj.}}
+
+\hypertarget{question-2-provide-a-basic-summary-of-the-data.}{%
+\subsection{Question 2: Provide a basic summary of the
+data.}\label{question-2-provide-a-basic-summary-of-the-data.}}
+
+\hypertarget{overally-the-spread-of-the-length-data-is-as-follows-with-a-mean-of-18.81-and-a-standard-deviation-of-7.65.}{%
+\subsubsection{Overally, the spread of the length data is as follows,
+with a mean of 18.81 and a standard deviation of
+7.65.}\label{overally-the-spread-of-the-length-data-is-as-follows-with-a-mean-of-18.81-and-a-standard-deviation-of-7.65.}}
+
+summary(ToothGrowth)
+
+sd(ToothGrowth\$len)
+
+\hypertarget{the-summary-of-the-length-data-while-taking-oj-as-supplement-is-as-follows-with-a-mean-of-20.66-and-a-standard-deviation-of-6.61.}{%
+\subsubsection{The summary of the length data while taking OJ as
+supplement is as follows, with a mean of 20.66 and a standard deviation
+of
+6.61.}\label{the-summary-of-the-length-data-while-taking-oj-as-supplement-is-as-follows-with-a-mean-of-20.66-and-a-standard-deviation-of-6.61.}}
+
+summary(ToothGrowth{[}ToothGrowth\$supp == ``OJ'', {]})
+
+sd(ToothGrowth{[}ToothGrowth\(supp == "OJ", ]\)len)
+
+\hypertarget{the-summary-of-the-length-data-while-taking-vc-as-supplement-is-as-follows-with-a-mean-of-16.96-and-a-standard-deviation-of-8.27.}{%
+\subsubsection{The summary of the length data while taking VC as
+supplement is as follows, with a mean of 16.96 and a standard deviation
+of
+8.27.}\label{the-summary-of-the-length-data-while-taking-vc-as-supplement-is-as-follows-with-a-mean-of-16.96-and-a-standard-deviation-of-8.27.}}
+
+summary(ToothGrowth{[}ToothGrowth\$supp == ``VC'', {]})
+
+sd(ToothGrowth{[}ToothGrowth\(supp == "VC", ]\)len)
+
+\hypertarget{to-see-a-better-spread-of-the-data-we-may-look-at-the-boxplots-under-different-values-of-dose-and-different-kinds-of-supplements.}{%
+\subsubsection{To see a better spread of the data, we may look at the
+boxplots under different values of dose and different kinds of
+supplements.}\label{to-see-a-better-spread-of-the-data-we-may-look-at-the-boxplots-under-different-values-of-dose-and-different-kinds-of-supplements.}}
+
+g \textless- ggplot(ToothGrowth, aes(dose, len, group = supp)) g +
+geom\_boxplot() + facet\_grid(supp \textasciitilde{} dose) + labs(x =
+``Dose of supplements'', y = ``Length of teeth growth'')
+
+\hypertarget{question-3-use-confidence-intervals-andor-hypothesis-tests-to-compare-tooth-growth-by-supp-and-dose.-only-use-the-techniques-from-class-even-if-theres-other-approaches-worth-considering}{%
+\subsection{Question 3: Use confidence intervals and/or hypothesis tests
+to compare tooth growth by supp and dose. (Only use the techniques from
+class, even if there's other approaches worth
+considering)}\label{question-3-use-confidence-intervals-andor-hypothesis-tests-to-compare-tooth-growth-by-supp-and-dose.-only-use-the-techniques-from-class-even-if-theres-other-approaches-worth-considering}}
+
+\hypertarget{if-we-assume-the-data-is-normally-distributed-we-have-a-null-hypothesis-that-there-is-no-difference-between-the-mean-under-each-kind-of-supplements-or-each-dose-of-the-supplements}{%
+\subsubsection{If we assume the data is normally distributed, we have a
+null hypothesis that there is no difference between the mean under each
+kind of supplements, or each dose of the
+supplements:}\label{if-we-assume-the-data-is-normally-distributed-we-have-a-null-hypothesis-that-there-is-no-difference-between-the-mean-under-each-kind-of-supplements-or-each-dose-of-the-supplements}}
+
+t.test(x =
+ToothGrowth\(len, data = ToothGrowth, paired = FALSE, conf.level = 0.95)\)conf.
+
+\hypertarget{we-will-be-able-to-construct-a-confidence-interval-that-95-of-the-time-an-interval-between-16.84-and-20.79-will-contain-the-true-mean-of-the-population.}{%
+\subsubsection{We will be able to construct a confidence interval that
+95\% of the time, an interval between 16.84 and 20.79 will contain the
+true mean of the
+population.}\label{we-will-be-able-to-construct-a-confidence-interval-that-95-of-the-time-an-interval-between-16.84-and-20.79-will-contain-the-true-mean-of-the-population.}}
+
+\#\#\#Then we calculate the mean under each kind of supplements, and
+each dose of the supplements:
+
+summary(ToothGrowth{[}ToothGrowth\(supp == "OJ", ]\)len){[}4{]}
+
+summary(ToothGrowth{[}ToothGrowth\(supp == "VC", ]\)len){[}4{]}
+
+\hypertarget{thus-the-mean-of-teeth-growth-after-taking-oj-is-20.66-the-mean-of-teeth-growth-after-taking-vc-is-16.96.-both-the-two-are-within-the-confidence-interval.-we-fail-to-reject-the-null-hypothesis-that-there-is-not-a-difference-in-teeth-growth-after-taking-the-two-kinds-of-supplements.}{%
+\subsubsection{Thus the mean of teeth growth after taking OJ is 20.66;
+the mean of teeth growth after taking VC is 16.96. Both the two are
+within the confidence interval. We fail to reject the null hypothesis
+that there is not a difference in teeth growth after taking the two
+kinds of
+supplements.}\label{thus-the-mean-of-teeth-growth-after-taking-oj-is-20.66-the-mean-of-teeth-growth-after-taking-vc-is-16.96.-both-the-two-are-within-the-confidence-interval.-we-fail-to-reject-the-null-hypothesis-that-there-is-not-a-difference-in-teeth-growth-after-taking-the-two-kinds-of-supplements.}}
+
+summary(ToothGrowth{[}ToothGrowth\(dose == 0.5, ]\)len){[}4{]}
+
+summary(ToothGrowth{[}ToothGrowth\(dose == 1, ]\)len){[}4{]}
+
+summary(ToothGrowth{[}ToothGrowth\(dose == 2, ]\)len){[}4{]}
+
+\hypertarget{thus-the-mean-of-teeth-growth-after-taking-dose-of-0.5-is-10.6-the-mean-of-teeth-growth-after-taking-dose-of-1.0-is-19.74-the-mean-of-teeth-growth-after-taking-dose-of-2.0-is-26.1.-we-are-able-to-reject-the-null-hypotheis-and-there-is-a-difference-in-teeth-growth-between-each-dose-of-supplements.}{%
+\paragraph{Thus the mean of teeth growth after taking dose of 0.5 is
+10.6; the mean of teeth growth after taking dose of 1.0 is 19.74; the
+mean of teeth growth after taking dose of 2.0 is 26.1. We are able to
+reject the null hypotheis, and there is a difference in teeth growth
+between each dose of
+supplements.}\label{thus-the-mean-of-teeth-growth-after-taking-dose-of-0.5-is-10.6-the-mean-of-teeth-growth-after-taking-dose-of-1.0-is-19.74-the-mean-of-teeth-growth-after-taking-dose-of-2.0-is-26.1.-we-are-able-to-reject-the-null-hypotheis-and-there-is-a-difference-in-teeth-growth-between-each-dose-of-supplements.}}
+
+\hypertarget{now-we-know-the-data-is-not-normally-distributed-under-each-dose-along-with-this-conclusion-we-may-assume-the-data-is-normally-distributed-within-each-dose.-then-we-will-be-able-to-compare-the-teeth-growth-between-each-supplements-under-each-dose}{%
+\subsection{Now we know the data is not normally distributed under each
+dose, along with this conclusion, we may assume the data is normally
+distributed within each dose. Then we will be able to compare the teeth
+growth between each supplements under each
+dose}\label{now-we-know-the-data-is-not-normally-distributed-under-each-dose-along-with-this-conclusion-we-may-assume-the-data-is-normally-distributed-within-each-dose.-then-we-will-be-able-to-compare-the-teeth-growth-between-each-supplements-under-each-dose}}
+
+dose05 \textless-
+ToothGrowth{[}ToothGrowth\(dose == 0.5, ] t.test(x = dose05\)len, paired
+= FALSE, conf.level = 0.95)\$conf.
+
+mean(dose05{[}dose05\(supp == "VC", ]\)len)
+
+mean(dose05{[}dose05\(supp == "OJ", ]\)len)
+
+\hypertarget{thus-under-the-dose-of-0.5-there-are-95-of-the-time-that-a-confidence-interval-between-8.50-and-12.71-will-contain-the-true-population-mean.-we-also-know-that-the-mean-of-teeth-growth-after-taking-0.5-dose-of-vc-is-7.98-and-the-mean-of-teeth-growth-after-taking-0.5-dose-of-oj-is-13.23.-we-rejected-the-null-hypo.}{%
+\subsubsection{Thus under the dose of 0.5, there are 95\% of the time
+that a confidence interval between 8.50 and 12.71 will contain the true
+population mean. We also know that the mean of teeth growth after taking
+0.5 dose of VC is 7.98 and the mean of teeth growth after taking 0.5
+dose of OJ is 13.23. We rejected the null
+hypo.}\label{thus-under-the-dose-of-0.5-there-are-95-of-the-time-that-a-confidence-interval-between-8.50-and-12.71-will-contain-the-true-population-mean.-we-also-know-that-the-mean-of-teeth-growth-after-taking-0.5-dose-of-vc-is-7.98-and-the-mean-of-teeth-growth-after-taking-0.5-dose-of-oj-is-13.23.-we-rejected-the-null-hypo.}}
+
+dose10 \textless-
+ToothGrowth{[}ToothGrowth\(dose == 1, ] t.test(x = dose10\)len, paired =
+FALSE, conf.level = 0.95)\$conf.
+
+mean(dose10{[}dose10\(supp == "VC", ]\)len)
+
+mean(dose10{[}dose10\(supp == "OJ", ]\)len)
+
+\hypertarget{thus-under-the-dose-of-1.0-there-are-95-of-the-time-that-a-confidence-interval-between-17.67-and-21.80-will-contain-the-true-population-mean.-we-also-know-that-the-mean-of-teeth-growth-after-taking-1.0-dose-of-vc-is-16.77-and-the-mean-of-teeth-growth-after-taking-1.0-dose-of-oj-is-22.7.-we-rejected-the-null-hypo.}{%
+\subsubsection{Thus under the dose of 1.0, there are 95\% of the time
+that a confidence interval between 17.67 and 21.80 will contain the true
+population mean. We also know that the mean of teeth growth after taking
+1.0 dose of VC is 16.77 and the mean of teeth growth after taking 1.0
+dose of OJ is 22.7. We rejected the null
+hypo.}\label{thus-under-the-dose-of-1.0-there-are-95-of-the-time-that-a-confidence-interval-between-17.67-and-21.80-will-contain-the-true-population-mean.-we-also-know-that-the-mean-of-teeth-growth-after-taking-1.0-dose-of-vc-is-16.77-and-the-mean-of-teeth-growth-after-taking-1.0-dose-of-oj-is-22.7.-we-rejected-the-null-hypo.}}
+
+dose20 \textless-
+ToothGrowth{[}ToothGrowth\(dose == 2, ] t.test(x = dose20\)len, paired =
+FALSE, conf.level = 0.95)\$conf.
+
+mean(dose20{[}dose20\(supp == "VC", ]\)len)
+
+mean(dose20{[}dose20\(supp == "OJ", ]\)len)
+
+\hypertarget{thus-under-the-dose-of-2.0-there-are-95-of-the-time-that-a-confidence-interval-between-24.33-and-27.87-will-contain-the-true-population-mean.-we-also-know-that-the-mean-of-teeth-growth-after-taking-2.0-dose-of-vc-is-26.14-and-the-mean-of-teeth-growth-after-taking-2.0-dose-of-oj-is-26.06.-both-of-them-are-within-the-confidence-interval.-we-fail-to-reject-the-null-hypothesis.}{%
+\subsubsection{Thus under the dose of 2.0, there are 95\% of the time
+that a confidence interval between 24.33 and 27.87 will contain the true
+population mean. We also know that the mean of teeth growth after taking
+2.0 dose of VC is 26.14 and the mean of teeth growth after taking 2.0
+dose of OJ is 26.06. Both of them are within the confidence interval. We
+fail to reject the null
+hypothesis.}\label{thus-under-the-dose-of-2.0-there-are-95-of-the-time-that-a-confidence-interval-between-24.33-and-27.87-will-contain-the-true-population-mean.-we-also-know-that-the-mean-of-teeth-growth-after-taking-2.0-dose-of-vc-is-26.14-and-the-mean-of-teeth-growth-after-taking-2.0-dose-of-oj-is-26.06.-both-of-them-are-within-the-confidence-interval.-we-fail-to-reject-the-null-hypothesis.}}
+
+\hypertarget{question-4-state-your-conclusions-and-the-assumptions-needed-for-your-conclusions.}{%
+\subsection{Question 4: State your conclusions and the assumptions
+needed for your
+conclusions.}\label{question-4-state-your-conclusions-and-the-assumptions-needed-for-your-conclusions.}}
+
+\hypertarget{the-conclusion-is-when-the-dose-is-0.5-or-1.0-there-is-a-difference-between-the-teeth-growth-after-taking-oj-and-vc-while-when-the-dose-is-2.0-there-is-no-difference-between-the-teeth-growth-after-taking-oj-and-vc.-the-assumption-needed-is-we-first-assumed-the-whole-population-is-normally-distributed-then-we-assumed-the-population-is-normally-distributed-under-each-dose.}{%
+\paragraph{The conclusion is when the dose is 0.5 or 1.0 there is a
+difference between the teeth growth after taking OJ and VC, while when
+the dose is 2.0, there is no difference between the teeth growth after
+taking OJ and VC. The assumption needed is we first assumed the whole
+population is normally distributed, then we assumed the population is
+normally distributed under each
+dose.}\label{the-conclusion-is-when-the-dose-is-0.5-or-1.0-there-is-a-difference-between-the-teeth-growth-after-taking-oj-and-vc-while-when-the-dose-is-2.0-there-is-no-difference-between-the-teeth-growth-after-taking-oj-and-vc.-the-assumption-needed-is-we-first-assumed-the-whole-population-is-normally-distributed-then-we-assumed-the-population-is-normally-distributed-under-each-dose.}}
+
+\end{document}
